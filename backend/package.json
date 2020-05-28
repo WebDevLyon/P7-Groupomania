@@ -1,0 +1,26 @@
+{
+  "name": "groupomania",
+  "version": "1.0.0",
+  "description": "Projet 7 du parcours développeur Web d'Openclassrooms",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [
+    "server",
+    "api",
+    "rest",
+    "social",
+    "network",
+    "database"
+  ],
+  "author": "Nicolas Lachise",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "mysql": "^2.18.1",
+    "sequelize": "^5.21.11"
+  }
+}
