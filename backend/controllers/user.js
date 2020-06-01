@@ -110,6 +110,6 @@ exports.updateProfil = (req, res) => {
             })
             .catch(error => res.status(500).json(error))
     } else {
-        res.status(422).json({ error: 'Rien n\'est à modifer' })
+        res.status(422 ).json({ error: 'Rien n\'est à modifer' })
     }
 }

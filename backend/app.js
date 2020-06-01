@@ -3,6 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 const userRoutes = require('./routes/user.js');
+const postRoutes = require('./routes/post.js');
 
 //création application Express
 const app = express();
@@ -22,5 +23,6 @@ app.use(bodyParser.json());
 
 //Middleware
 app.use('/api/user', userRoutes);
+app.use('/api/post', postRoutes);
 
 module.exports = app;
