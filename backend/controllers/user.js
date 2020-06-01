@@ -1,7 +1,8 @@
 //Import
 let bcrypt = require('bcrypt');
 let jwt = require('jsonwebtoken');
-let models = require('../models')
+let models = require('../models');
+let utils = require('../utils/jwtUtils');
 
 //Création d'un user
 exports.signup = (req, res) => {
@@ -30,7 +31,7 @@ exports.signup = (req, res) => {
                         email: email,
                         username: username,
                         password: bcryptPassword,
-                        isAdmin: 0
+                        isAdmin: false
                     })
                         .then(newUser => { res.status(201).json({ 'id': newUser.id }) })
                         .catch(err => {
@@ -45,6 +46,7 @@ exports.signup = (req, res) => {
         .catch(err => { res.status(500).json({ err }) })
 };
 
+//Login d'un user
 exports.login = (req, res) => {
     //Récupération et validation des paramètres
     let username = req.body.username;
@@ -62,22 +64,52 @@ exports.login = (req, res) => {
                     if (resComparePassword) {
                         res.status(200).json({
                             userId: user.id,
-                            token: jwt.sign(
-                                {
-                                    userId: user.id,
-                                    isAdmin: user.isAdmin
-                                },
-                                'DEVELOPMENT_TOKEN_SECRET',
-                                { expiresIn: '24h' }
-                            ),
-                        });
+                            token: utils.generateToken(user)
+                        })
                     } else {
                         res.status(403).json({ error: 'invalid password' });
-                    }
+                    };
                 })
             } else {
                 res.status(404).json({ 'erreur': 'Cet utilisateur n\'existe pas' })
             }
         })
         .catch(err => { res.status(500).json({ err }) })
+};
+
+//Profil d'un user
+exports.userProfil = (req, res) => {
+    let id = utils.getUserId(req.headers.authorization)
+    models.User.findOne({
+        attributes: ['id', 'email', 'username'],
+        where: { id: id }
+    })
+        .then(user => res.status(200).json(user))
+        .catch(error => res.status(500).json(error))
+};
+
+//modification d'un profil
+exports.updateProfil = (req, res) => {
+    let id = utils.getUserId(req.headers.authorization)
+    if (req.body.password != null) {
+        models.User.findOne({
+            attributes: ['id', 'email', 'username'],
+            where: { id: id }
+        })
+            .then(user => {
+                if (user) {
+                    bcrypt.hash(req.body.password, 10, function (err, bcryptPassword) {
+                        user.update(
+                            { password: bcryptPassword },
+                            { where: 'password' }
+                        )
+                            .then(() => res.status(201).json({ message: 'Password mis à jour' }))
+                            .catch(err => res.status(500).json(err))
+                    })
+                }
+            })
+            .catch(error => res.status(500).json(error))
+    } else {
+        res.status(422).json({ error: 'Rien n\'est à modifer' })
+    }
 }
