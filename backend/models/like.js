@@ -1,7 +1,7 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const Like = sequelize.define('Like', {
-    messageId: {
+    postId: {
       type: DataTypes.INTEGER,
       references: {
         model: 'Post',
@@ -21,12 +21,12 @@ module.exports = (sequelize, DataTypes) => {
     models.User.belongsToMany(models.Post, {
       through: models.Like,
       foreignKey: 'userId',
-      otherKey: 'PostId',
+      otherKey: 'postId',
     });
 
     models.Post.belongsToMany(models.User, {
       through: models.Like,
-      foreignKey: 'PostId',
+      foreignKey: 'postId',
       otherKey: 'userId',
     });
 
@@ -36,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
     });
 
     models.Like.belongsTo(models.Post, {
-      foreignKey: 'PostId',
+      foreignKey: 'postId',
       as: 'post',
     });
   };
