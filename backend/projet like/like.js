@@ -1,4 +1,4 @@
-'use strict';
+/*'use strict';
 module.exports = (sequelize, DataTypes) => {
   const Like = sequelize.define('Like', {
     postId: {
@@ -41,4 +41,4 @@ module.exports = (sequelize, DataTypes) => {
     });
   };
   return Like;
-};
+};*/

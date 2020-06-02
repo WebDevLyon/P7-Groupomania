@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 
 const userRoutes = require('./routes/user.js');
 const postRoutes = require('./routes/post.js');
-const likeRoutes = require('./routes/like.js');
+//const likeRoutes = require('./routes/like.js');
 
 //création application Express
 const app = express();
@@ -25,7 +25,7 @@ app.use(bodyParser.json());
 //Middleware
 app.use('/api/user', userRoutes);
 app.use('/api/post', postRoutes);
-app.use('/api/post/vote', likeRoutes);
+//app.use('/api/post/vote', likeRoutes);
 
 
 module.exports = app;
