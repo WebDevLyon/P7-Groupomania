@@ -1,4 +1,4 @@
-'use strict';
+/*'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('Likes', {
@@ -8,7 +8,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      postd: {
+      postId: {
         allowNull: false,
         type: Sequelize.INTEGER,
         references:{
@@ -37,4 +37,4 @@ module.exports = {
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable('Likes');
   }
-};
+};*/
