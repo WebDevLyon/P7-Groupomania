@@ -2,13 +2,6 @@
   <div class="form-signup">
     <img src="../assets/logo.png" alt="Logo Groupomania" />
     <div class="form-group">
-      <label for="email">
-        Email Groupomania
-        <span class="requis">*</span>
-      </label>
-      <input v-model="dataSignup.email" id="email" type="email" />
-    </div>
-    <div class="form-group">
       <label for="username">
         Pseudo
         <span class="requis">*</span>
@@ -22,7 +15,7 @@
       </label>
       <input v-model="dataSignup.password" id="password" type="password" />
     </div>
-    <button @click.prevent="sendSignup" id="btn-connect">Se connecter</button>
+    <button @click.prevent="logIn" id="btn-connect">Se connecter</button>
   </div>
 </template>
 
@@ -34,7 +27,6 @@ export default {
   data() {
     return {
       dataSignup: {
-        username: null,
         email: null,
         password: null
       },
@@ -42,20 +34,18 @@ export default {
     };
   },
   methods: {
-    sendSignup() {
+    logIn() {
       if (
-        this.dataSignup.email !== null ||
         this.dataSignup.username !== null ||
         this.dataSignup.password !== null
       ) {
         axios
-          .post("http://localhost:3000/api/user/signup", this.dataSignup)
+          .post("http://localhost:3000/api/user/login", this.dataSignup)
           .then(response => {
-            console.log(response);
-            //Réinitialisation
-            this.dataSignup.email = null;
-            this.dataSignup.username = null;
-            this.dataSignup.password = null;
+            let token = response.data.token;
+            console.log(token)
+            localStorage.setItem('token', token)
+
           })
           .catch(error => console.log(error));
       } else {

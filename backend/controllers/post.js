@@ -21,7 +21,7 @@ exports.create = (req, res) => {
                 } else {
                     models.Post.create({
                         content: content,
-                        attachement: attachment,
+                        attachement: null,//`${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
                         like: 0,
                         UserId: user.id
                     })

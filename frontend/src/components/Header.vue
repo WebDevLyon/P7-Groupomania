@@ -5,11 +5,11 @@
     </div>
     <div class="topbar__nav">
       <div class="topbar__nav__link">
-        <a class="btn-nav btn-nav--actu" href>Actualité</a>
-        <a class="btn-nav btn-nav--signup" href>Sign Up</a>
-        <a class="btn-nav btn-nav--login" href>Log In</a>
+        <router-link class="btn-nav btn-nav--actu" to='/'>Actualité</router-link>
+        <router-link class="btn-nav btn-nav--signup" to="/signup">Sign Up</router-link>
+        <router-link class="btn-nav btn-nav--login" to="/login">Log In</router-link>
       </div>
-      <div class="topbar__nav__profil">ICON USER</div>
+      <div class="topbar__nav__profil"><router-link to="/user"><i class="fas fa-user"></i></router-link></div>
     </div>
   </header>
 </template>
