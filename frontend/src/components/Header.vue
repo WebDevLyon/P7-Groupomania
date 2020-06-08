@@ -5,9 +5,9 @@
     </div>
     <div class="topbar__nav">
       <div class="topbar__nav__link">
-        <router-link class="btn-nav btn-nav--actu" to='/'>Actualité</router-link>
-        <router-link class="btn-nav btn-nav--signup" to="/signup">Sign Up</router-link>
-        <router-link class="btn-nav btn-nav--login" to="/login">Log In</router-link>
+        <router-link class="btn btn--actu" to='/'>Actualité</router-link>
+        <router-link class="btn btn--signup" to="/signup">Sign Up</router-link>
+        <router-link class="btn btn--login" to="/login">Log In</router-link>
       </div>
       <div class="topbar__nav__profil"><router-link to="/user"><i class="fas fa-user"></i></router-link></div>
     </div>
@@ -31,7 +31,10 @@ export default {
   }
   &__nav {
     display: flex;
-    & .btn-nav {
+    
+  }
+}
+.btn {
       text-decoration: none;
       color: inherit;
       border: 1px solid;
@@ -52,6 +55,4 @@ export default {
         color: pink;
       }
     }
-  }
-}
 </style>
