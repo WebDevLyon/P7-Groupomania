@@ -1,9 +1,9 @@
 <template>
-  <div id="wall" class="wall">
+  <div id="wall" class="row wall">
     <!--<NewPost/>Components à créer
     <Post ????/>-->
     <CreatePost />
-    <div class="block-post" v-for="(post, index) in allPosts" v-bind:key="index">
+    <div class="row block-post" v-for="(post, index) in allPosts" v-bind:key="index">
       <h3>
         Post by
         <span>{{ post.User.username }}</span> le

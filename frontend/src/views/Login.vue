@@ -1,21 +1,34 @@
 <template>
-  <div class="form-signup">
-    <img src="../assets/logo.png" alt="Logo Groupomania" />
-    <div class="form-group">
-      <label for="username">
-        Pseudo
-        <span class="requis">*</span>
-      </label>
-      <input v-model="dataSignup.username" id="username" type="text" />
-    </div>
-    <div class="form-group">
-      <label for="password">
-        Password
-        <span class="requis">*</span>
-      </label>
-      <input v-model="dataSignup.password" id="password" type="password" />
-    </div>
-    <button @click.prevent="logIn" id="btn-connect">Se connecter</button>
+  <div class="row block-content">
+    <form class="w-75 align-items-center form-block d-flex m-auto shadow rounded">
+      <div
+        class="form-block--left d-flex flex-column justify-content-center block-demi-container p-3 text-right align-self-stretch"
+      >
+        <img class="logo align-self-end" src="../assets/icon.svg" alt="Logo Groupomania" />
+        <p>
+          <small>
+            Vous n'avez pas encore de compte,
+            <router-link class="redirection-singup" to="/signup">enregistrez-vous</router-link>
+          </small>
+        </p>
+      </div>
+      <div class="block-demi-container p-3">
+        <div class="form-group">
+          <label for="inputUsername">Username</label>
+          <input type="text" class="form-control" id="inputUsername" v-model="dataLogin.username" />
+        </div>
+        <div class="form-group">
+          <label for="inputPassword">Password</label>
+          <input
+            type="password"
+            class="form-control"
+            id="inputPassword"
+            v-model="dataLogin.password"
+          />
+        </div>
+        <button @click.prevent="logIn" type="submit" class="btn btn-primary">Submit</button>
+      </div>
+    </form>
   </div>
 </template>
 
@@ -26,8 +39,8 @@ export default {
   name: "SignUp",
   data() {
     return {
-      dataSignup: {
-        email: null,
+      dataLogin: {
+        username: null,
         password: null
       },
       msg: ""
@@ -36,16 +49,16 @@ export default {
   methods: {
     logIn() {
       if (
-        this.dataSignup.username !== null ||
-        this.dataSignup.password !== null
+        //TO DO : Vérifier par Regex
+        this.dataLogin.username !== null ||
+        this.dataLogin.password !== null
       ) {
         axios
-          .post("http://localhost:3000/api/user/login", this.dataSignup)
+          .post("http://localhost:3000/api/user/login", this.dataLogin)
           .then(response => {
             let token = response.data.token;
-            console.log(token)
-            localStorage.setItem('token', token)
-
+            console.log(token);
+            localStorage.setItem("token", token);
           })
           .catch(error => console.log(error));
       } else {
@@ -57,23 +70,35 @@ export default {
 </script>
 
 <style lang="scss">
-.form-signup {
-  text-align: center;
-  padding: 2rem;
+.block-content {
+  background-image: url("../assets/bg-login-signup.jpg");
+  background-size: cover;
+  height: 100vh;
 }
-.form-group {
-  margin: 1rem;
-  & label {
-    flex: 1;
-    text-align: end;
+.block-demi-container {
+  flex: 1;
+}
+.form-block {
+  background-color: rgba(255, 255, 255, 0.75);
+  &--left {
+    background-color: rgba(118, 118, 118, 0.75);
   }
-  & input {
-    display: block;
-    margin: auto;
+  @media screen and (max-width: 425px) {
+    width: 100%;
+    margin: 0;
   }
-  & .requis {
-    color: red;
-    font-size: 0.8rem;
+  .logo {
+    width: 80%;
+  }
+}
+.redirection-singup {
+  color: rgba(0, 40, 45, 1);
+  border: 1px solid black;
+  border-radius: 3px;
+  padding: 0.2rem;
+  &:hover {
+    background-color: green;
+    color: white;
   }
 }
 </style>

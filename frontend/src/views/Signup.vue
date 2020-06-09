@@ -1,6 +1,6 @@
 <template>
   <div class="form-signup">
-    <img src="../assets/logo.png" alt="Logo Groupomania" />
+    <img class="logo" src="../assets/icon.png" alt="Logo Groupomania" />
     <div class="form-group">
       <label for="email">
         Email Groupomania
@@ -67,23 +67,7 @@ export default {
 </script>
 
 <style lang="scss">
-.form-signup {
-  text-align: center;
-  padding: 2rem;
-}
-.form-group {
-  margin: 1rem;
-  & label {
-    flex: 1;
-    text-align: end;
-  }
-  & input {
-    display: block;
-    margin: auto;
-  }
-  & .requis {
-    color: red;
-    font-size: 0.8rem;
-  }
+.logo{
+  width:10px;
 }
 </style>
