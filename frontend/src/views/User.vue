@@ -22,9 +22,9 @@
             et au minimum un charactère numérique et un charactère spécial
           </p>
         </div>
-        <a class="btn btn--actu">Changer le mot de passe</a>
+        <button type="button" class="btn btn-primary">Primary</button>
       </div>
-      <a class="btn-action--alert">Supprimer le compte</a>
+      <button type="button" class="btn btn-danger white">Delete account</button>
     </section>
   </div>
 </template>
@@ -41,10 +41,6 @@ export default {
 </script>
 
 <style lang="scss">
-//Palette color norme contrast WCAG
-$colorBG: #fff;
-$gris: #797676;
-
 .user-info {
   &__block {
     &--flex {
@@ -65,7 +61,7 @@ $gris: #797676;
   }
 }
 
-.btn-action{
-  color:blue
+.btn-action {
+  color: blue;
 }
 </style>

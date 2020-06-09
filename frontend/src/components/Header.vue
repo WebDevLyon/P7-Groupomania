@@ -1,58 +1,43 @@
 <template>
-  <header class="topbar">
-    <div class="topbar__logo">
-      <p>LOGO</p>
-    </div>
-    <div class="topbar__nav">
-      <div class="topbar__nav__link">
-        <router-link class="btn btn--actu" to='/'>Actualité</router-link>
-        <router-link class="btn btn--signup" to="/signup">Sign Up</router-link>
-        <router-link class="btn btn--login" to="/login">Log In</router-link>
+    <nav class="row navbar navbar-expand-lg navbar-light bg-light fixed-top px-4">
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarToggle"
+        aria-controls="navbarToggle"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <a class="navbar-brand" href="#">Groupomania</a>
+
+      <div class="collapse navbar-collapse justify-content-end" id="navbarToggle">
+        <ul class="navbar-nav mt-2 mt-lg-0">
+          <li class="nav-item">
+            <router-link class="nav-link" to="/">
+              Home
+            </router-link>
+          </li>
+          <li class="nav-item">
+            <router-link class="nav-link" to="/signup">Sign Up</router-link>
+          </li>
+          <li class="nav-item">
+            <router-link class="nav-link" to="/login">Log In</router-link>
+          </li>
+        </ul>
       </div>
-      <div class="topbar__nav__profil"><router-link to="/user"><i class="fas fa-user"></i></router-link></div>
-    </div>
-  </header>
+    </nav>
 </template>
 
 <script>
-export default {
-  name: "Header"
-};
+export default {};
 </script>
 
 <style lang='scss'>
-.topbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 50px;
-  &__logo {
-    height: 100%;
-  }
-  &__nav {
-    display: flex;
-    
-  }
+nav{
+  position:fixed;
+  top:0
 }
-.btn {
-      text-decoration: none;
-      color: inherit;
-      border: 1px solid;
-      border-radius: 0.3rem;
-      padding: 0.3rem 0.8rem;
-      margin: 0.3rem;
-      &--login {
-        color: green;
-      }
-      &--signup {
-        color: red;
-      }
-      &--actu {
-        color: blue;
-      }
-      &:hover,
-      &:focus {
-        color: pink;
-      }
-    }
 </style>
