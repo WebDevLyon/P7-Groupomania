@@ -1,5 +1,5 @@
 <template>
-  <div class="row block-content">
+  <main class="main main--connect">
     <form class="w-75 align-items-center form-block d-flex m-auto shadow rounded">
       <div
         class="form-block--left d-flex flex-column justify-content-center block-demi-container p-3 text-right align-self-stretch"
@@ -29,7 +29,7 @@
         <button @click.prevent="logIn" type="submit" class="btn btn-primary">Submit</button>
       </div>
     </form>
-  </div>
+  </main>
 </template>
 
 <script>
@@ -56,9 +56,7 @@ export default {
         axios
           .post("http://localhost:3000/api/user/login", this.dataLogin)
           .then(response => {
-            let token = response.data.token;
-            console.log(token);
-            localStorage.setItem("token", token);
+            this.$store.commit('saveToken',  [response.data.userId,response.data.token, response.data.isAdmin])
           })
           .catch(error => console.log(error));
       } else {
@@ -70,35 +68,4 @@ export default {
 </script>
 
 <style lang="scss">
-.block-content {
-  background-image: url("../assets/bg-login-signup.jpg");
-  background-size: cover;
-  height: 100vh;
-}
-.block-demi-container {
-  flex: 1;
-}
-.form-block {
-  background-color: rgba(255, 255, 255, 0.75);
-  &--left {
-    background-color: rgba(118, 118, 118, 0.75);
-  }
-  @media screen and (max-width: 425px) {
-    width: 100%;
-    margin: 0;
-  }
-  .logo {
-    width: 80%;
-  }
-}
-.redirection-singup {
-  color: rgba(0, 40, 45, 1);
-  border: 1px solid black;
-  border-radius: 3px;
-  padding: 0.2rem;
-  &:hover {
-    background-color: green;
-    color: white;
-  }
-}
 </style>

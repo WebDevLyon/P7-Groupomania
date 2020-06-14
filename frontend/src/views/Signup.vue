@@ -1,6 +1,39 @@
 <template>
-  <div class="form-signup">
-    <img class="logo" src="../assets/icon.png" alt="Logo Groupomania" />
+  <main class="main main--connect">
+     <form class="w-75 align-items-center form-block d-flex m-auto shadow rounded">
+      <div
+        class="form-block--left d-flex flex-column justify-content-center block-demi-container p-3 text-right align-self-stretch"
+      >
+        <img class="logo align-self-end" src="../assets/icon.svg" alt="Logo Groupomania" />
+        <p>
+          <small>
+            Vous avez déjà un compte,
+            <router-link class="redirection-singup" to="/signup">connecter-vous</router-link>
+          </small>
+        </p>
+      </div>
+      <div class="block-demi-container p-3">
+         <div class="form-group">
+          <label for="inputEmail">Email Groupomania</label>
+          <input type="email" class="form-control" id="inputEmail" v-model="dataSignup.email" />
+        </div>
+        <div class="form-group">
+          <label for="inputUsername">Username</label>
+          <input type="text" class="form-control" id="inputUsername" v-model="dataSignup.username" />
+        </div>
+        <div class="form-group">
+          <label for="inputPassword">Password</label>
+          <input
+            type="password"
+            class="form-control"
+            id="inputPassword"
+            v-model="dataSignup.password"
+          />
+        </div>
+        <button @click.prevent="sendSignup" type="submit" class="btn btn-primary">Submit</button>
+      </div>
+    </form>
+   <!-- <img class="logo" src="../assets/icon.png" alt="Logo Groupomania" />
     <div class="form-group">
       <label for="email">
         Email Groupomania
@@ -22,8 +55,8 @@
       </label>
       <input v-model="dataSignup.password" id="password" type="password" />
     </div>
-    <button @click.prevent="sendSignup" id="btn-connect">Se connecter</button>
-  </div>
+    <button @click.prevent="sendSignup" id="btn-connect">Se connecter</button>-->
+  </main>
 </template>
 
 <script>
@@ -67,7 +100,4 @@ export default {
 </script>
 
 <style lang="scss">
-.logo{
-  width:10px;
-}
 </style>

@@ -3,7 +3,6 @@
 //import
 let jwt = require('jsonwebtoken')
 
-
 module.exports = {
   tokenSign : 'DEVELOPMENT_TOKEN_SECRET',
   generateToken: function (user) {

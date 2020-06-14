@@ -3,6 +3,7 @@ let bcrypt = require('bcrypt');
 let jwt = require('jsonwebtoken');
 let models = require('../models');
 let utils = require('../utils/jwtUtils');
+let verifInput = require('../utils/verifInput')
 
 //Création d'un user
 exports.signup = (req, res) => {
@@ -16,34 +17,43 @@ exports.signup = (req, res) => {
     }
 
     //TO DO => Vérification des saisies user
-
-    //Vérification si user n'existe pas déjà
-    //TO DO => Vérifier l'username et l'email
-    models.User.findOne({
-        attributes: ['email'],
-        where: { email: email }
-    })
-        .then(user => {
-            if (!user) {
-                bcrypt.hash(password, 10, function (err, bcryptPassword) {
-                    // Création de l'user
-                    const newUser = models.User.create({
-                        email: email,
-                        username: username,
-                        password: bcryptPassword,
-                        isAdmin: false
-                    })
-                        .then(newUser => { res.status(201).json({ 'id': newUser.id }) })
-                        .catch(err => {
-                            res.status(500).json({ err })
-                        })
-                })
-            }
-            else {
-                res.status(409).json({ error: 'Cette utilisateur existe déjà ' })
-            }
+    let emailOk = verifInput.validEmail(email);
+    console.log(emailOk)
+    let mdpOK = verifInput.validPassword(password);
+    console.log(mdpOK)
+    let usernameOk = verifInput.validUsername(username);
+    console.log(usernameOk)
+    if (emailOk == true && mdpOK == true && usernameOk == true) {
+        //Vérification si user n'existe pas déjà
+        //TO DO => Vérifier l'username et l'email
+        models.User.findOne({
+            attributes: ['email'],
+            where: { email: email }
         })
-        .catch(err => { res.status(500).json({ err }) })
+            .then(user => {
+                if (!user) {
+                    bcrypt.hash(password, 10, function (err, bcryptPassword) {
+                        // Création de l'user
+                        const newUser = models.User.create({
+                            email: email,
+                            username: username,
+                            password: bcryptPassword,
+                            isAdmin: false
+                        })
+                            .then(newUser => { res.status(201).json({ 'id': newUser.id }) })
+                            .catch(err => {
+                                res.status(500).json({ err })
+                            })
+                    })
+                }
+                else {
+                    res.status(409).json({ error: 'Cette utilisateur existe déjà ' })
+                }
+            })
+            .catch(err => { res.status(500).json({ err }) })
+    } else {
+        console.log('pas cette fois')
+    }
 };
 
 //Login d'un user
@@ -64,7 +74,8 @@ exports.login = (req, res) => {
                     if (resComparePassword) {
                         res.status(200).json({
                             userId: user.id,
-                            token: utils.generateToken(user)
+                            token: utils.generateToken(user),
+                            isAdmin: user.isAdmin
                         })
                     } else {
                         res.status(403).json({ error: 'invalid password' });
@@ -110,6 +121,29 @@ exports.updateProfil = (req, res) => {
             })
             .catch(error => res.status(500).json(error))
     } else {
-        res.status(422 ).json({ error: 'Rien n\'est à modifer' })
+        res.status(422).json({ error: 'Rien n\'est à modifer' })
     }
+};
+
+//Suppression d'un compte
+exports.deleteProfile = (req, res) => {
+    //récupération de l'id de l'user
+    let id = utils.getUserId(req.headers.authorization)
+    if (id != null) {
+        models.User.destroy({
+            where: { id: id }
+        })
+            .then((user) => {
+                if (user != null) {
+                    res.status(204).end('error: utilisateur n\'existe pas')
+                }
+                else {
+                    res.status(200).json({msg:'Utilisateur supprimé'})
+                }
+            })
+            .catch(err => res.json({ err }))
+    } else {
+        res.status(500).json({ error: 'Impossible de supprimer ce compte, contacter un administrateur' })
+    }
+    res.end()
 }

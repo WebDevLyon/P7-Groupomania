@@ -37,8 +37,6 @@ exports.create = (req, res) => {
             }
         })
         .catch(error => res.status(500).json(error));
-
-
 }
 
 //Afficher les posts sur le mur

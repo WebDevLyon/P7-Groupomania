@@ -3,11 +3,12 @@
     <!--<NewPost/>Components à créer
     <Post ????/>-->
     <CreatePost />
+    <!--<Post/>-->
     <div class="row block-post" v-for="(post, index) in allPosts" v-bind:key="index">
       <h3>
         Post by
         <span>{{ post.User.username }}</span> le
-        <span>{{post.createdAt.split('T')[0]}} à {{post.createdAt.split('T')[1].split('.')[0]}}</span>
+        <span>{{post.createdAt.split(' ')[0]}} à {{post.createdAt.split(' ')[1]}}</span>
       </h3>
       <div>{{post.attachement}}</div>
       <p>{{post.content}}</p>
@@ -29,13 +30,14 @@
 
 <script>
 import axios from "axios";
-import CreatePost from '../components/CreatePost'
+import CreatePost from '../components/CreatePost';
 //import Post from '../components/Post'
+
 export default {
   name: "Mur",
   components: {
     CreatePost,
-    //    Post
+    //Post
   },
   data() {
     return {
@@ -82,13 +84,8 @@ export default {
         },*/
   },
   mounted() {
-    //console.log("mounted");
     axios
-      .get("http://localhost:3000/api/post", {
-        headers: {
-          Authorization: "Bearer " + window.localStorage.getItem("token")
-        }
-      })
+      .get("http://localhost:3000/api/post",this.$store.state.headerParams)
       .then(response => {
         //console.log(response);
         this.allPosts = response.data;

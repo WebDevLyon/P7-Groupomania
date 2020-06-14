@@ -1,15 +1,15 @@
 <template>
   <div>
-      <div v-for='post in posts' :key='post'>
+      <div>
       <h3>
         Post by
-        <span>{{ post.User.username }}</span> le
-        <span>{{post.createdAt}}</span>
+        <span>Lorem, ipsum.</span> le
+        <span>DATE</span>
       </h3>
-      <div>{{post.attachement}}</div>
-      <p>{{post.content}}</p>
+      <div>IMAGE</div>
+      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Temporibus incidunt facere nostrum cumque architecto doloribus aspernatur exercitationem consequatur, quo officiis recusandae enim delectus consectetur dolores.</p>
       <div class="post__bottom-bar">
-        <div>{{post.like}}  <i class="fas fa-thumbs-up"></i> <i class="fas fa-thumbs-down"></i> <a href=#>Commentaire</a></div>
+        <div>NBLIKE  <i class="fas fa-thumbs-up"></i> <i class="fas fa-thumbs-down"></i> <a href=#>Commentaire</a></div>
       </div>
       </div>
     </div>
