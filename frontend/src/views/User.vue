@@ -61,6 +61,12 @@ export default {
         .delete("http://localhost:3000/api/user/delete", localStorage.getItem('token'))
         .then(response => console.log(response))
         .catch(error => console.log(error));
+    },
+    changePassword(){
+      axios
+      .update("ENDPOINT", 'TOKEN')
+      .then(response=>console.log('pwd change', response))
+      .catch(err=>console.log(err))
     }
   }
 };

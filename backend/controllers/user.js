@@ -128,22 +128,36 @@ exports.updateProfil = (req, res) => {
 //Suppression d'un compte
 exports.deleteProfile = (req, res) => {
     //récupération de l'id de l'user
-    let id = utils.getUserId(req.headers.authorization)
-    if (id != null) {
-        models.User.destroy({
-            where: { id: id }
+    let userId = utils.getUserId(req.headers.authorization);
+    if (userId != null) {
+        //Recherche sécurité si user existe bien
+        models.User.findOne({
+            where: { id: userId }
         })
-            .then((user) => {
+            .then(user => {
                 if (user != null) {
-                    res.status(204).end('error: utilisateur n\'existe pas')
+                    //Delete de tous les posts de l'user même s'il y en a pas
+                    models.Post
+                        .destroy({
+                            where: { userId: user.id }
+                        })
+                        .then(() => {
+                            console.log('Tous les posts de cet user ont été supprimé');
+                            //Suppression de l'utilisateur
+                            models.User
+                                .destroy({
+                                    where: { id: user.id }
+                                })
+                                .then(() => res.end())
+                                .catch(err => console.log(err))
+                        })
+                        .catch(err => res.status(500).json(err))
                 }
                 else {
-                    res.status(200).json({msg:'Utilisateur supprimé'})
+                    res.status(401).json({ error: 'Cet user n\'existe pas' })
                 }
             })
-            .catch(err => res.json({ err }))
     } else {
         res.status(500).json({ error: 'Impossible de supprimer ce compte, contacter un administrateur' })
     }
-    res.end()
 }
