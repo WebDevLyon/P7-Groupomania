@@ -100,30 +100,41 @@ exports.userProfil = (req, res) => {
 };
 
 //modification d'un profil
-exports.updateProfil = (req, res) => {
-    let id = utils.getUserId(req.headers.authorization)
-    if (req.body.password != null) {
+exports.changePwd = (req, res) => {
+    //TO DO:
+    //Récupère l'id de l'user et le nouveau password
+    let userId = utils.getUserId(req.headers.authorization);
+    const newPassword = req.body.newPassword;
+    //Vérification regex du nouveau mot de passe
+    console.log('admin', verifInput.validPassword(newPassword))
+    if (verifInput.validPassword(newPassword)) {
+        //Vérifie qu'il est différent de l'ancien
         models.User.findOne({
-            attributes: ['id', 'email', 'username'],
-            where: { id: id }
+            where: { id: userId }
         })
             .then(user => {
-                if (user) {
-                    bcrypt.hash(req.body.password, 10, function (err, bcryptPassword) {
-                        user.update(
-                            { password: bcryptPassword },
-                            { where: 'password' }
-                        )
-                            .then(() => res.status(201).json({ message: 'Password mis à jour' }))
-                            .catch(err => res.status(500).json(err))
-                    })
-                }
+                console.log('user trouvé', user)
+                bcrypt.compare(newPassword, user.password, (errComparePassword, resComparePassword) => {
+                    //bcrypt renvoit resComparePassword si les mdp sont identiques donc aucun changement
+                    if (resComparePassword) {
+                        res.status(406).json({ error: 'Vous avez entré le même mot de passe' })
+                    } else {
+                        bcrypt.hash(newPassword, 10, function (err, bcryptNewPassword) {
+                            models.User.update(
+                                { password: bcryptNewPassword },
+                                { where: { id: user.id } }
+                            )
+                                .then(() => res.status(201).json({ confirmation: 'mot de passe modifié avec succès' }))
+                                .catch(err => res.status(500).json(err))
+                        })
+                    }
+                })
             })
-            .catch(error => res.status(500).json(error))
+            .catch(err => json(err))
     } else {
-        res.status(422).json({ error: 'Rien n\'est à modifer' })
+        res.status(406).json({ error: 'mot de passe non valide' })
     }
-};
+}
 
 //Suppression d'un compte
 exports.deleteProfile = (req, res) => {
