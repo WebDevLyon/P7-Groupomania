@@ -49,40 +49,6 @@ export default {
       nbCom: []
     };
   },
-  methods: {
-    /* afficheCom(pId){
-            this.postId=pId;
-            //console.log(pId)
-            axios.get("http://localhost:3000/api/posts/" + pId + "/comments")
-                .then(response => {
-                    //console.log(response);
-                    this.allComments=response.data;
-                })
-                .catch(error => {
-                console.log(error);
-                });
-        },
-        countComments(pId){
-            let nbCom = this.nbCom;
-            console.log("dans countComments");
-            nbCom.forEach((element) => {
-                if (element.postId===pId){
-                    console.log(element.nbComments);
-                    this.com=element.nbComments;
-                    
-                    return element.nbComments;
-                }else{
-                    this.com=0;
-                    
-                    return 0 ;
-                }
-            })  
-        },
-        afficheForm(){
-            this.affichePsts=false;
-            this.afficheFrm=true;
-        },*/
-  },
   mounted() {
     axios
       .get("http://localhost:3000/api/post",this.$store.state.headerParams)

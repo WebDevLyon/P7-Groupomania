@@ -19,7 +19,6 @@ module.exports = (req, res, next) => {
             next();
         });
     }
-
     // Sinon, on renvoie le statut 401 Unauthorized
     else {
         res.status(401);

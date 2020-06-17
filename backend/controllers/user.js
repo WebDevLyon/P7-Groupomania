@@ -105,6 +105,7 @@ exports.changePwd = (req, res) => {
     //Récupère l'id de l'user et le nouveau password
     let userId = utils.getUserId(req.headers.authorization);
     const newPassword = req.body.newPassword;
+    console.log(newPassword)
     //Vérification regex du nouveau mot de passe
     console.log('admin', verifInput.validPassword(newPassword))
     if (verifInput.validPassword(newPassword)) {
