@@ -180,7 +180,7 @@ export default {
         }
       });
       inputRepeatNewPwd.addEventListener("input", function() {
-      if (inputRepeatNewPwd.value == inputNewPwd.value) {
+      if (inputRepeatNewPwd.value == inputNewPwd.value && regexPassword.test(inputRepeatNewPwd.value)) {
         inputRepeatNewPwd.style.backgroundColor = "#4CAF50";
       } else {
         inputRepeatNewPwd.style.backgroundColor = "#f44336";
