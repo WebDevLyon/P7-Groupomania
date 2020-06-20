@@ -4,6 +4,8 @@ const bodyParser = require('body-parser');
 
 const userRoutes = require('./routes/user.js');
 const postRoutes = require('./routes/post.js');
+
+const path = require('path');
 //const likeRoutes = require('./routes/like.js');
 
 //création application Express
@@ -23,6 +25,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 //Middleware
+app.use('/images', express.static(path.join(__dirname, 'images')));
+
 app.use('/api/user', userRoutes);
 app.use('/api/post', postRoutes);
 //app.use('/api/post/vote', likeRoutes);

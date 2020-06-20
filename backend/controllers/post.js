@@ -5,6 +5,9 @@ let utils = require('../utils/jwtUtils');
 
 //Création d'un message
 exports.create = (req, res) => {
+    //initialisation de l'url de l'image à null si absente
+    let attachmentURL = null
+    console.log('TEST1:', req.file)
     //identifier qui créé le message
     let id = utils.getUserId(req.headers.authorization)
     models.User.findOne({
@@ -15,13 +18,19 @@ exports.create = (req, res) => {
             if (user !== null) {
                 //Récupération du corps du post
                 let content = req.body.content;
-                let attachment = req.body.attachment
-                if (content == null && attachment == null) {
+                console.log('content : ', content)
+                if(req.file != undefined){
+                attachmentURL = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
+                console.log('attachement: ', attachmentURL)}
+                else{
+                   attachmentURL =null
+                }
+                if (content == null && attachmentURL == null) {
                     res.status(400).json({ error: 'Rien à publier' })
                 } else {
                     models.Post.create({
                         content: content,
-                        attachement: null,//`${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
+                        attachement: attachmentURL,
                         like: 0,
                         UserId: user.id
                     })
@@ -34,17 +43,18 @@ exports.create = (req, res) => {
                 };
             } else {
                 res.status(400).json({ error: 'User n\'existe pas' });
+                console.log("error");
             }
         })
-        .catch(error => res.status(500).json(error));
+        .catch(error => { res.status(500).json(error); console.log('admin', error) });
 }
 
 //Afficher les posts sur le mur
 exports.listMsg = (req, res) => {
     models.Post.findAll({
-        include:[{
-            model : models.User,
-            attributes:['username']
+        include: [{
+            model: models.User,
+            attributes: ['username']
         }]
     })
         .then(posts => {
@@ -54,5 +64,5 @@ exports.listMsg = (req, res) => {
                 res.status(404).json({ error: 'Pas de post à afficher' })
             }
         })
-    .catch (err=> res.status(500).json(err))
+        .catch(err => res.status(500).json(err))
 }

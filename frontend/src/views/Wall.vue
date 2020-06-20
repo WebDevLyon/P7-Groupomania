@@ -1,10 +1,21 @@
 <template>
-  <div id="wall" class="row wall">
+  <div id="wall" class="wall">
     <!--<NewPost/>Components à créer
     <Post ????/>-->
     <CreatePost />
-    <!--<Post/>-->
-    <div class="row block-post" v-for="(post, index) in allPosts" v-bind:key="index">
+    <Post
+      class="x"
+      v-for="(post, index) in allPosts"
+      v-bind:key="index"
+      :user="post.User.username"
+      :jour="post.createdAt.split(' ')[0]"
+      :heure="post.createdAt.split(' ')[1]"
+      :text="post.content"
+      :attachment="post.attachement"
+      :like="post.like"
+    />
+
+    <!-- <div class="row block-post" v-for="(post, index) in allPosts" v-bind:key="index">
       <h3>
         Post by
         <span>{{ post.User.username }}</span> le
@@ -24,34 +35,39 @@
           </div>
         </div>
       </div>
-    </div>
+    </div>-->
   </div>
 </template>
 
 <script>
 import axios from "axios";
-import CreatePost from '../components/CreatePost';
-//import Post from '../components/Post'
+import CreatePost from "../components/CreatePost";
+import Post from "../components/Post";
 
 export default {
   name: "Mur",
   components: {
     CreatePost,
-    //Post
+    Post
   },
   data() {
     return {
-      affichePsts: true,
-      afficheFrm: false,
-      allPosts: [],
-      allComments: [],
-      postId: "",
-      nbCom: []
+      //affichePsts: true,
+      //afficheFrm: false,
+      allPosts: []
+      //allComments: [],
+      //postId: "",
+      //nbCom: []
     };
   },
   mounted() {
     axios
-      .get("http://localhost:3000/api/post",this.$store.state.headerParams)
+      .get("http://localhost:3000/api/post", {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token")
+        }
+      })
+      //.get("http://localhost:3000/api/post",this.$store.state.headerParams)
       .then(response => {
         //console.log(response);
         this.allPosts = response.data;
@@ -73,9 +89,9 @@ export default {
 
 <style lang="scss">
 .wall {
-  background-color: grey;
+  background-color: white;
   min-height: 100%;
-  padding : 5rem 0 2rem 0;
+  padding: 5rem 0 2rem 0;
 }
 .block-post {
   background-color: white;
@@ -94,12 +110,12 @@ export default {
     & div {
       display: inline-block;
       margin: 0 0.5rem;
-      & i{
-          margin: 0 0.2rem;
+      & i {
+        margin: 0 0.2rem;
       }
-      & a{
-          text-decoration: none;
-          color: grey
+      & a {
+        text-decoration: none;
+        color: grey;
       }
     }
     font-weight: 700;
