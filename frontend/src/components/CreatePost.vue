@@ -26,6 +26,7 @@
           </div>
         </div>
         <input type="submit" class="btn btn-primary" @click.prevent="createPost" value="Submit" />
+        <span id='msgReturnAPI' class="mx-3">{{msgError}}</span>
       </form>
     </div>
   </div>
@@ -40,50 +41,44 @@ export default {
       contentPost: {
         content: null,
         postImage: null
-      }
+      },
+      msgError: ""
     };
   },
   methods: {
     createPost() {
       console.log(this.contentPost);
-      const fd = new FormData()
-      fd.append('inputFile', this.contentPost.postImage);
-      fd.append('content', this.contentPost.content);
-      console.log(fd);
-      axios
-        .post("http://localhost:3000/api/post/create", fd, {
-          headers: {
-            Authorization: "Bearer " + window.localStorage.getItem("token")
-          }
-        })
-        .then(response => {
-          //Si retour positif de l'API reload de la page pour affichage du dernier post
-          if (response) {
-            //window.location.reload();
-          }
-        })
-        .catch(error => console.log(error));
+
+      const fd = new FormData();
+      fd.append("inputFile", this.contentPost.postImage);
+      fd.append("content", this.contentPost.content);
+      console.log("test récup", fd.get("inputFile"));
+      console.log("test récup", fd.get("content"));
+      if (fd.get("inputFile") == "null" && fd.get("content") == "null") {
+        let msgReturn = document.getElementById('msgReturnAPI')
+        msgReturn.classList.add('text-danger')
+        this.msgError = "Rien à publier";
+      } else {
+        axios
+          .post("http://localhost:3000/api/post/create", fd, {
+            headers: {
+              Authorization: "Bearer " + window.localStorage.getItem("token")
+            }
+          })
+          .then(response => {
+            //Si retour positif de l'API reload de la page pour affichage du dernier post
+            if (response) {
+              window.location.reload();
+            }
+          })
+          .catch(error => (this.msgError = error));
+      }
     },
     onFileChange(e) {
       console.log(e);
       this.contentPost.postImage = e.target.files[0] || e.dataTransfer.files;
       console.log(this.contentPost.postImage);
-      if (!this.contentPost.postImage.length) return;
-      this.createImage(this.contentPost.postImage[0]);
-    },
-    createImage(file) {
-      this.contentPost.postImage = new Image();
-      var reader = new FileReader();
-      var vm = this;
-
-      reader.onload = e => {
-        vm.image = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    } /*,
-  removeImage: function(e) {
-    this.image = "";
-  }*/
+    }
   }
 };
 </script>

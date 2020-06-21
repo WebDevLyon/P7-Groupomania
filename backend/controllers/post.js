@@ -5,9 +5,8 @@ let utils = require('../utils/jwtUtils');
 
 //Création d'un message
 exports.create = (req, res) => {
-    //initialisation de l'url de l'image à null si absente
-    let attachmentURL = null
-    console.log('TEST1:', req.file)
+    //Declaration de l'url de l'image
+    let attachmentURL
     //identifier qui créé le message
     let id = utils.getUserId(req.headers.authorization)
     models.User.findOne({
@@ -18,14 +17,13 @@ exports.create = (req, res) => {
             if (user !== null) {
                 //Récupération du corps du post
                 let content = req.body.content;
-                console.log('content : ', content)
-                if(req.file != undefined){
-                attachmentURL = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
-                console.log('attachement: ', attachmentURL)}
-                else{
-                   attachmentURL =null
+                if (req.file != undefined) {
+                    attachmentURL = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
                 }
-                if (content == null && attachmentURL == null) {
+                else {
+                    attachmentURL == null
+                };
+                if ((content == 'null' && attachmentURL == null)) {
                     res.status(400).json({ error: 'Rien à publier' })
                 } else {
                     models.Post.create({
@@ -42,11 +40,10 @@ exports.create = (req, res) => {
                         })
                 };
             } else {
-                res.status(400).json({ error: 'User n\'existe pas' });
-                console.log("error");
+                res.status(400).json(error);
             }
         })
-        .catch(error => { res.status(500).json(error); console.log('admin', error) });
+        .catch(error => res.status(500).json(error));
 }
 
 //Afficher les posts sur le mur

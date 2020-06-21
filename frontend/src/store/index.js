@@ -1,33 +1,45 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import axios from 'axios'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    Email: 'email@email.com',
-    Username: 'Username',
-    UserId: 'x',
-    token: null,
-    auth:{
-      userId : "",
-      token : "",
-      isAdmin: ""
-    },
-    headerParams: {
-      headers: {
-        Authorization: "Bearer " 
-      }
+    user: {
+      username: 'Nc',
+      userId: 'Nc',
+      email: 'Nc',
+      token: null,
+      isAdmin: false
     }
   },
   mutations: {
-    saveToken(state, [userId, token, isAdmin]) {
-      state.auth.userId = userId,
-      state.auth.token = token,
-      state.auth.isAdmin = isAdmin
+    saveUserInfos(state, [username, userId, email, isAdmin]) {
+        state.user.username = username,
+          state.user.userId = userId,
+          state.user.email = email,
+          state.user.token = localStorage.getItem('token'),
+          state.user.isAdmin = isAdmin
     }
   },
   actions: {
+    getUserInfos(context) {
+      axios
+        .get("http://localhost:3000/api/user/me", {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token")
+          }
+        })
+        //.get("http://localhost:3000/api/post",this.$store.state.headerParams)
+        .then(response => {
+          console.log('réponse API',response);
+          context.commit('saveUserInfos',[response.data.username, response.data.userId, response.data.email, response.data.isAdmin])
+        })
+        .catch(error => {
+          console.log('Erreur auth', error); //affiche pas le message 'normalement' envoyé par le back
+        });
+    }
   },
   modules: {
   }

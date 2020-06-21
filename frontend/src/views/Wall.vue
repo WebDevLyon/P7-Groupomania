@@ -1,41 +1,16 @@
 <template>
   <div id="wall" class="wall">
-    <!--<NewPost/>Components à créer
-    <Post ????/>-->
     <CreatePost />
     <Post
-      class="x"
       v-for="(post, index) in allPosts"
       v-bind:key="index"
-      :user="post.User.username"
+      :userCreatePost="post.User.username"
       :jour="post.createdAt.split(' ')[0]"
       :heure="post.createdAt.split(' ')[1]"
       :text="post.content"
       :attachment="post.attachement"
       :like="post.like"
     />
-
-    <!-- <div class="row block-post" v-for="(post, index) in allPosts" v-bind:key="index">
-      <h3>
-        Post by
-        <span>{{ post.User.username }}</span> le
-        <span>{{post.createdAt.split(' ')[0]}} à {{post.createdAt.split(' ')[1]}}</span>
-      </h3>
-      <div>{{post.attachement}}</div>
-      <p>{{post.content}}</p>
-      <div class="post__bottom-bar">
-        <div class="like-section">
-          <div>{{post.like}}</div>
-          <div>
-            <i class="fas fa-thumbs-up"></i>
-            <i class="fas fa-thumbs-down"></i>
-          </div>
-          <div>
-            <a href="#">Commentaire</a>
-          </div>
-        </div>
-      </div>
-    </div>-->
   </div>
 </template>
 
@@ -69,13 +44,13 @@ export default {
       })
       //.get("http://localhost:3000/api/post",this.$store.state.headerParams)
       .then(response => {
-        //console.log(response);
+        console.log("post", response.data);
         this.allPosts = response.data;
       })
       .catch(error => {
         console.log(error); //affiche pas le message 'normalement' envoyé par le back
-      });
-    /*axios.get("http://localhost:3000/api/posts/comments")
+      }),
+      /*axios.get("http://localhost:3000/api/posts/comments")
                 .then(response => {
                     this.nbCom=response.data;
                     console.log(this.nbCom);
@@ -83,6 +58,7 @@ export default {
                 .catch(error => {
                 console.log(error);
                 });*/
+      this.$store.dispatch("getUserInfos");
   }
 };
 </script>

@@ -16,13 +16,13 @@
         <div class="user-info__block">
           <p class="user-info__block__title mb-0">Email</p>
           <p class="user-info__block__output">
-            <small>{{$store.state.auth.userId}}</small>
+            <small>{{user.email}}</small>
           </p>
         </div>
         <div class="user-info__block">
           <p class="user-info__block__title mb-0">Username</p>
           <p class="user-info__block__output">
-            <small>{{$store.state.Username}}</small>
+            <small>{{user.username}}</small>
           </p>
         </div>
         <div class="user-info__block d-sm-flex justify-content-between user-info__block--flex">
@@ -105,6 +105,7 @@
 
 <script>
 import axios from "axios";
+import { mapState } from "vuex";
 
 export default {
   name: "User",
@@ -117,14 +118,21 @@ export default {
       }
     };
   },
+  computed: {
+    ...mapState(["user"])
+  },
   methods: {
     deleteAccount() {
       axios
-        .delete(
-          "http://localhost:3000/api/user/delete",
-          localStorage.getItem("token")
-        )
-        .then(response => console.log(response))
+        .delete("http://localhost:3000/api/user/delete", {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token")
+          }
+        })
+        .then(() => {
+          localStorage.clear();
+          window.location.reload();
+        })
         .catch(error => console.log(error));
     },
     changePassword() {
@@ -180,14 +188,21 @@ export default {
         }
       });
       inputRepeatNewPwd.addEventListener("input", function() {
-      if (inputRepeatNewPwd.value == inputNewPwd.value && regexPassword.test(inputRepeatNewPwd.value)) {
-        inputRepeatNewPwd.style.backgroundColor = "#4CAF50";
-      } else {
-        inputRepeatNewPwd.style.backgroundColor = "#f44336";
-      }})
+        if (
+          inputRepeatNewPwd.value == inputNewPwd.value &&
+          regexPassword.test(inputRepeatNewPwd.value)
+        ) {
+          inputRepeatNewPwd.style.backgroundColor = "#4CAF50";
+        } else {
+          inputRepeatNewPwd.style.backgroundColor = "#f44336";
+        }
+      });
     }
+  },
+  mounted() {
+    this.$store.dispatch("getUserInfos");
   }
-}
+};
 </script>
 
 <style lang="scss">

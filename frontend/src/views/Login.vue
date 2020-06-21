@@ -56,7 +56,6 @@ export default {
         axios
           .post("http://localhost:3000/api/user/login", this.dataLogin)
           .then(response => {
-            this.$store.commit('saveToken',  [response.data.userId,response.data.token, response.data.isAdmin]);
             localStorage.setItem('token',response.data.token)
           })
           .catch(error => console.log(error));
