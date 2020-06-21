@@ -1,7 +1,7 @@
 <template>
   <div class="card mb-4 w-75 mx-auto">
     <div class="card-header d-flex justify-content-between">
-      <div>Post by {{userCreatePost}} le {{jour}} à {{heure}}</div>
+      <div>Post by {{userCreatePost}} le {{jour}} à {{heure}} id {{idPost}}</div>
       <div class="dropdown" v-if="user.isAdmin==true || user.username == userCreatePost">
         <svg
           class="bi bi-three-dots dropdown-toggle"
@@ -21,9 +21,20 @@
           />
         </svg>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuPost">
-          <button class="dropdown-item" type="button">Action</button>
-          <button class="dropdown-item" type="button">Another action</button>
-          <button class="dropdown-item" type="button">Something else here</button>
+          <button
+            class="dropdown-item modifPost"
+            data-toggle="modal"
+            data-target="#modalEditPost"
+            type="button"
+            @click="changeEditStyleForModif"
+          >Modifier</button>
+          <button
+            class="dropdown-item deletePost"
+            data-toggle="modal"
+            data-target="#modalEditPost"
+            type="button"
+            @click="changeEditStyleForDelete"
+          >Supprimer</button>
         </div>
       </div>
     </div>
@@ -45,23 +56,63 @@
         <a href="#" class="text-reset">Commentaire</a>
       </div>
     </div>
+
+    <!--Modal Box Edit/Delete Post-->
+    <div
+      class="modal fade"
+      id="modalEditPost"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="ModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="ModalLabel" v-if="this.editOption=='modify'">Modifier le post</h5>
+            <h5 class="modal-title" id="ModalLabel" v-else>Supprimer ce post</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body" >
+            <modifPost  v-if="this.editOption=='modify'"/>
+            <p v-else>Etes vous sûr de vouloir supprimer ce post</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+            <button type="button" class="btn btn-primary" v-if="this.editOption=='modify'">Save changes</button>
+            <button type="button" class="btn btn-danger" v-else @click="deletePost">Delete post</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--END Boite modal édit post-->
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
+import modifPost from "../components/ModifPost";
 
 export default {
   name: "Post",
+  components: {
+    modifPost
+  },
   data() {
     return {
-      
+      editOption: "plop"
     };
   },
   computed: {
     ...mapState(["user"])
   },
   props: {
+    idPost: {
+      type: Number,
+      required: true
+    },
     userCreatePost: {
       type: String,
       default: "anonyme"
@@ -85,6 +136,17 @@ export default {
     attachment: {
       type: String,
       default: ""
+    }
+  },
+  methods: {
+    changeEditStyleForDelete() {
+      this.editOption = "delete";
+    },
+    changeEditStyleForModif(){
+      this.editOption = "modify";
+    },
+    deletePost() {
+      console.log("Fonction de suppression du post " + this.idPost);
     }
   }
 };

@@ -4,6 +4,7 @@
     <Post
       v-for="(post, index) in allPosts"
       v-bind:key="index"
+      :idPost='post.id'
       :userCreatePost="post.User.username"
       :jour="post.createdAt.split(' ')[0]"
       :heure="post.createdAt.split(' ')[1]"
