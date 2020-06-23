@@ -1,8 +1,8 @@
 <template>
   <div class="card mb-4 w-75 mx-auto">
     <div class="card-header d-flex justify-content-between">
-      <div>Post by {{userCreatePost}} le {{jour}} à {{heure}} id {{idPost}}</div>
-      <div class="dropdown" v-if="user.isAdmin==true || user.username == userCreatePost">
+      <div>Post {{this.post.id}} by {{post.User.username}} le {{post.createdAt.split(' ')[0]}} à {{post.createdAt.split(' ')[1]}} id {{this.post.id}}</div>
+      <div class="dropdown" v-if="user.isAdmin==true || user.username == post.User.username">
         <svg
           class="bi bi-three-dots dropdown-toggle"
           id="dropdownMenuPost"
@@ -26,28 +26,28 @@
             data-toggle="modal"
             data-target="#modalEditPost"
             type="button"
-            @click="changeEditStyleForModif"
+            @click="emitInfoPost();changeEditStyle('modify');"
           >Modifier</button>
           <button
             class="dropdown-item deletePost"
             data-toggle="modal"
             data-target="#modalEditPost"
             type="button"
-            @click="changeEditStyleForDelete"
+            @click="emitInfoPost();changeEditStyle('delete');"
           >Supprimer</button>
         </div>
       </div>
     </div>
     <div class="card-body">
-      <div class="card-img-top w-75 mx-auto" v-if="attachment">
-        <img :src="attachment" alt="..." class="w-100" />
+      <div class="card-img-top w-75 mx-auto" v-if="post.attachement">
+        <img :src="post.attachement" alt="..." class="w-100" />
       </div>
-      <div class="card-text" v-if="text!=='null'">
-        <p class="mb-0">{{text}}</p>
+      <div class="card-text" v-if="post.content!=='null'">
+        <p class="mb-0">{{post.content}}</p>
       </div>
     </div>
     <div class="d-flex card-footer">
-      <div class="mx-1">{{like}}</div>
+      <div class="mx-1">{{post.like}}</div>
       <div>
         <i class="fas fa-thumbs-up mx-1"></i>
         <i class="fas fa-thumbs-down mx-1"></i>
@@ -56,98 +56,59 @@
         <a href="#" class="text-reset">Commentaire</a>
       </div>
     </div>
-
-    <!--Modal Box Edit/Delete Post-->
-    <div
-      class="modal fade"
-      id="modalEditPost"
-      tabindex="-1"
-      role="dialog"
-      aria-labelledby="ModalLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="ModalLabel" v-if="this.editOption=='modify'">Modifier le post</h5>
-            <h5 class="modal-title" id="ModalLabel" v-else>Supprimer ce post</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body" >
-            <modifPost  v-if="this.editOption=='modify'"/>
-            <p v-else>Etes vous sûr de vouloir supprimer ce post</p>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
-            <button type="button" class="btn btn-primary" v-if="this.editOption=='modify'">Save changes</button>
-            <button type="button" class="btn btn-danger" v-else @click="deletePost">Delete post</button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!--END Boite modal édit post-->
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
-import modifPost from "../components/ModifPost";
+//import axios from "axios";
 
 export default {
   name: "Post",
-  components: {
-    modifPost
-  },
+  components: {},
   data() {
-    return {
-      editOption: "plop"
-    };
+    return {};
   },
   computed: {
-    ...mapState(["user"])
+    ...mapState(["user", "editOption"])
   },
   props: {
-    idPost: {
-      type: Number,
+    post: {
+      type: Object,
       required: true
-    },
-    userCreatePost: {
-      type: String,
-      default: "anonyme"
-    },
-    jour: {
-      type: String,
-      required: true
-    },
-    heure: {
-      type: String,
-      required: true
-    },
-    text: {
-      type: String,
-      default: null
-    },
-    like: {
-      type: Number,
-      default: 0
-    },
-    attachment: {
-      type: String,
-      default: ""
     }
   },
   methods: {
-    changeEditStyleForDelete() {
-      this.editOption = "delete";
+    emitInfoPost() {
+      this.$emit("infosPost", { post: this.post });
     },
-    changeEditStyleForModif(){
-      this.editOption = "modify";
+    changeEditStyle(value) {
+      this.$store.dispatch("changeEditStyle", value);
+    },
+    chargeValuePost(postId, postContent, postImage) {
+      this.post.id = postId;
+      this.post.content = postContent;
+      this.post.attachement = postImage;
     },
     deletePost() {
-      console.log("Fonction de suppression du post " + this.idPost);
-    }
+      console.log("Fonction de suppression du post " + this.post.id);
+      console.log("user demandeur", this.user);
+      /*axios
+        .delete("http://localhost:3000/api/post/delete", {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token")
+          },
+          data: {
+            postId: this.idPost,
+            userIdOrder: this.user.userId
+          }
+        })
+        .then(() => {
+          window.location.reload();
+        })
+        .catch(error => console.log(error));*/
+    },
+    updatePost() {}
   }
 };
 </script>

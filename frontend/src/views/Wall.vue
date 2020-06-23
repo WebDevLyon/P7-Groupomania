@@ -2,16 +2,12 @@
   <div id="wall" class="wall">
     <CreatePost />
     <Post
-      v-for="(post, index) in allPosts"
-      v-bind:key="index"
-      :idPost='post.id'
-      :userCreatePost="post.User.username"
-      :jour="post.createdAt.split(' ')[0]"
-      :heure="post.createdAt.split(' ')[1]"
-      :text="post.content"
-      :attachment="post.attachement"
-      :like="post.like"
+      v-for="post in allPosts"
+      v-bind:key="post.id"
+      :post="post"
+      @infosPost="setInfos"
     />
+    <modalBoxModerate :post="post" />
   </div>
 </template>
 
@@ -19,15 +15,21 @@
 import axios from "axios";
 import CreatePost from "../components/CreatePost";
 import Post from "../components/Post";
+import modalBoxModerate from "../components/ModifPost";
 
 export default {
   name: "Mur",
   components: {
     CreatePost,
-    Post
+    Post,
+    modalBoxModerate
   },
   data() {
     return {
+      post:{
+        id: "",
+        content:'',
+        image:''},
       //affichePsts: true,
       //afficheFrm: false,
       allPosts: []
@@ -35,6 +37,11 @@ export default {
       //postId: "",
       //nbCom: []
     };
+  },
+  methods: {
+    setInfos(payload) {
+      this.post= payload.post;
+    }
   },
   mounted() {
     axios

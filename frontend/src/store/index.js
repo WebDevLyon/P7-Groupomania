@@ -12,7 +12,8 @@ export default new Vuex.Store({
       email: 'Nc',
       token: null,
       isAdmin: false
-    }
+    },
+    editOption: ""
   },
   mutations: {
     saveUserInfos(state, [username, userId, email, isAdmin]) {
@@ -21,6 +22,9 @@ export default new Vuex.Store({
           state.user.email = email,
           state.user.token = localStorage.getItem('token'),
           state.user.isAdmin = isAdmin
+    },
+    editStyle(state, value) {
+      state.editOption = value
     }
   },
   actions: {
@@ -34,11 +38,14 @@ export default new Vuex.Store({
         //.get("http://localhost:3000/api/post",this.$store.state.headerParams)
         .then(response => {
           console.log('réponse API',response);
-          context.commit('saveUserInfos',[response.data.username, response.data.userId, response.data.email, response.data.isAdmin])
+          context.commit('saveUserInfos',[response.data.username, response.data.id, response.data.email, response.data.isAdmin])
         })
         .catch(error => {
           console.log('Erreur auth', error); //affiche pas le message 'normalement' envoyé par le back
         });
+    },
+    changeEditStyle(context, value){
+      context.commit('editStyle',value)
     }
   },
   modules: {
