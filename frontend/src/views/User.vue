@@ -131,7 +131,7 @@ export default {
         })
         .then(() => {
           localStorage.clear();
-          window.location.reload();
+          location.replace(location.origin+'/#/signup');
         })
         .catch(error => console.log(error));
     },

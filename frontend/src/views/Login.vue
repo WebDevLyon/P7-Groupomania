@@ -34,6 +34,8 @@
 
 <script>
 import axios from "axios";
+import { mapState } from "vuex";
+
 
 export default {
   name: "SignUp",
@@ -46,6 +48,9 @@ export default {
       msg: ""
     };
   },
+  computed: {
+    ...mapState(["user"])
+  },
   methods: {
     logIn() {
       if (
@@ -57,6 +62,7 @@ export default {
           .post("http://localhost:3000/api/user/login", this.dataLogin)
           .then(response => {
             localStorage.setItem('token',response.data.token)
+            location.replace(location.origin)
           })
           .catch(error => console.log(error));
       } else {

@@ -1,6 +1,7 @@
 //Import
 let models = require('../models');
 let utils = require('../utils/jwtUtils');
+const fs = require('fs');
 
 
 //Création d'un message
@@ -79,11 +80,31 @@ exports.delete = (req, res) => {
             if (user && (user.isAdmin == true || user.id == userOrder)) {
                 console.log('Suppression du post id :', req.body.postId);
                 models.Post
-                    .destroy({
+                    .findOne({
                         where: { id: req.body.postId }
                     })
-                    .then(() => {
-                        res.end();
+                    .then((postFind) => {
+
+                        if (postFind.attachement) {
+                            const filename = postFind.attachement.split('/images/')[1];
+                            console.log("teseeeest", filename);
+                            fs.unlink(`images/${filename}`, () => {
+                                models.Post
+                                    .destroy({
+                                        where: { id: postFind.id }
+                                    })
+                                    .then(() => res.end())
+                                    .catch(err => res.status(500).json(err))
+                            })
+                        }
+                        else {
+                            models.Post
+                                .destroy({
+                                    where: { id: postFind.id }
+                                })
+                                .then(() => res.end())
+                                .catch(err => res.status(500).json(err))
+                        }
                     })
                     .catch(err => res.status(500).json(err))
             } else { res.status(403).json('Utilisateur non autorisé à supprimer ce post') }
@@ -107,8 +128,9 @@ exports.update = (req, res) => {
                 console.log('Modif ok pour le post :', req.body.postId);
                 models.Post
                     .update(
-                        {content: req.body.newText,
-                        attachement: req.body.newImg
+                        {
+                            content: req.body.newText,
+                            attachement: req.body.newImg
                         },
                         { where: { id: req.body.postId } }
                     )

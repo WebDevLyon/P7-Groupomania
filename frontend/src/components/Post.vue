@@ -46,16 +46,6 @@
         <p class="mb-0">{{post.content}}</p>
       </div>
     </div>
-    <div class="d-flex card-footer">
-      <div class="mx-1">{{post.like}}</div>
-      <div>
-        <i class="fas fa-thumbs-up mx-1"></i>
-        <i class="fas fa-thumbs-down mx-1"></i>
-      </div>
-      <div class="mx-1">
-        <a href="#" class="text-reset">Commentaire</a>
-      </div>
-    </div>
   </div>
 </template>
 

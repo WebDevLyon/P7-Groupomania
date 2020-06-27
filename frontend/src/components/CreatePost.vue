@@ -26,7 +26,8 @@
           </div>
         </div>
         <input type="submit" class="btn btn-primary" @click.prevent="createPost" value="Submit" />
-        <span id='msgReturnAPI' class="mx-3">{{msgError}}</span>
+        <span id='msgReturnAPI' class="mx-3 text-danger" v-if="user.token==null">Veuillez vous connecter</span>
+        <span id='msgReturnAPI' class="mx-3" v-else>{{msgError}}</span>
       </form>
     </div>
   </div>
@@ -34,6 +35,8 @@
 
 <script>
 import axios from "axios";
+import { mapState } from "vuex";
+
 export default {
   name: "CreatePost",
   data() {
@@ -44,6 +47,9 @@ export default {
       },
       msgError: ""
     };
+  },
+  computed: {
+    ...mapState(["user", "editOption"])
   },
   methods: {
     createPost() {

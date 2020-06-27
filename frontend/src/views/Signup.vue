@@ -8,7 +8,7 @@
         <p>
           <small>
             Vous avez déjà un compte,
-            <router-link class="redirection-singup" to="/signup">connecter-vous</router-link>
+            <router-link class="redirection-singup" to="/login">connecter-vous</router-link>
           </small>
         </p>
       </div>
@@ -60,6 +60,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 import axios from "axios";
 
 export default {
@@ -73,6 +74,9 @@ export default {
       },
       msg: ""
     };
+  },
+  computed: {
+    ...mapState(["user"])
   },
   methods: {
     sendSignup() {
