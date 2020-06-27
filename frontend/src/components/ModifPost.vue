@@ -11,49 +11,30 @@
       <!--Modification est demandée-->
       <div class="modal-content" v-if="editOption=='modify'">
         <div class="modal-header">
-          <h5 class="modal-title" id="ModalLabel">Modifier le post (id: {{post.id}} )</h5>
+          <h5 class="modal-title" id="ModalLabel">Modifier le post</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
-          <!--Si le demandeur clique sur modifier-->
-            <form enctype="multipart/form-data" action="/create" method="post">
-              <div class="input-group mb-3">
-                <label for="input_text">Modifiez ou supprimer le text</label>
-                <br />
-                <textarea class="input-text" id="input_text" type="text" :value="post.content"></textarea>
-              </div>
-              <div class="input-group mb-3">
-                <p for="input_text">Modifiez ou supprimer l'image</p>
-                <br />
-                <img class="img-thumbnail" :src="post.attachement" />
-              </div>
+          <form enctype="multipart/form-data" action="/update" method="put">
+            <div class="input-group mb-3">
+              <label for="input_text">Modifiez votre texte</label>
+              <br />
+              <textarea class="input-text" id="inputNewText" type="text" :value="post.content"></textarea>
+            </div>
+            <div class="input-group mb-3" v-if="post.attachement">
+              <br />
+              <img class="img-thumbnail" :src="post.attachement" />
+              <button type="button" class="btn btn-danger mx-auto mt-1" @click='deleteImgAction'>Delete image</button>
+            </div>
 
-              <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                  <span class="input-group-text" id="inputFileAddon">Upload New Image</span>
-                </div>
-                <div class="custom-file">
-                  <input
-                    name="inputFile"
-                    type="file"
-                    class="custom-file-input"
-                    id="inputFile"
-                    aria-describedby="inputFileAddon"
-                  />
-                  <label class="custom-file-label" for="inputFile">Choose file</label>
-                </div>
-              </div>
-              <span id="msgReturnAPI" class="mx-3"></span>
-            </form>
+            <span id="msgReturnAPI" class="mx-3"></span>
+          </form>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
-          <button
-            type="button"
-            class="btn btn-primary"
-          >Save changes</button>
+          <button type="button" class="btn btn-primary" @click="updatePost">Save changes</button>
         </div>
       </div>
 
@@ -84,7 +65,9 @@ import axios from "axios";
 export default {
   name: "modalBoxModerate",
   data() {
-    return {};
+    return {
+      deleteImg: false
+    };
   },
   computed: {
     ...mapState(["user", "editOption"])
@@ -96,15 +79,7 @@ export default {
     }
   },
   methods: {
-    /*
-    chargeValuePost(postId, postContent, postImage) {
-      this.post.id = postId;
-      this.post.content = postContent;
-      this.post.attachement = postImage;
-    },*/
     deletePost() {
-      console.log("Fonction de suppression du post " + this.post.id);
-      console.log("user demandeur", this.user);
       axios
         .delete("http://localhost:3000/api/post/delete", {
           headers: {
@@ -120,7 +95,77 @@ export default {
         })
         .catch(error => console.log(error));
     },
-    updatePost() {}
+
+    updatePost() {
+      let newInput = document.getElementById("inputNewText").value;
+      //Verification si changements existent
+      let newContent = false;
+      if (newInput !== this.post.content || this.deleteImg != false) {
+        newContent = true;
+      }
+      //Modificiation si changements existent
+      if (newContent && this.deleteImg) {
+        axios
+          .put(
+            "http://localhost:3000/api/post/update",
+            {
+              postId: this.post.id,
+              userIdOrder: this.user.userId,
+              newText: newInput,
+              newImg: null
+            },
+            {
+              headers: {
+                authorization: "Bearer " + localStorage.getItem("token")
+              }
+            }
+          )
+          .then(response => {
+            console.log("reponse API", response);
+            this.retourAPI = response.data.confirmation;
+            setTimeout(() => {
+              this.retourAPI = "";
+              // window.location.reload();
+            }, 2000);
+          })
+          .catch(err => {
+            console.log("admin", err);
+            this.retourAPI = "Une erreur est survenue, vérifier vos saisies";
+          })
+      } else if(newContent){
+        axios
+          .put(
+            "http://localhost:3000/api/post/update",
+            {
+              postId: this.post.id,
+              userIdOrder: this.user.userId,
+              newText: newInput,
+            },
+            {
+              headers: {
+                authorization: "Bearer " + localStorage.getItem("token")
+              }
+            }
+          )
+          .then(response => {
+            console.log("reponse API", response);
+            this.retourAPI = response.data.confirmation;
+            setTimeout(() => {
+              this.retourAPI = "";
+              // window.location.reload();
+            }, 2000);
+          })
+          .catch(err => {
+            console.log("admin", err);
+            this.retourAPI = "Une erreur est survenue, vérifier vos saisies";
+          })}
+          else{
+        console.log("aucun changement");
+      }
+    },
+    deleteImgAction() {
+      this.deleteImg = true;
+    }
   }
 };
 </script>

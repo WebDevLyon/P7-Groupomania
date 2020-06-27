@@ -1,7 +1,7 @@
 <template>
   <div class="card mb-4 w-75 mx-auto">
     <div class="card-header d-flex justify-content-between">
-      <div>Post {{this.post.id}} by {{post.User.username}} le {{post.createdAt.split(' ')[0]}} à {{post.createdAt.split(' ')[1]}} id {{this.post.id}}</div>
+      <div>Post by <em class="text-secondary">{{post.User.username}}</em> le <em class="text-secondary">{{post.createdAt.split(' ')[0]}}</em> à <em class="text-secondary">{{post.createdAt.split(' ')[1]}}</em></div>
       <div class="dropdown" v-if="user.isAdmin==true || user.username == post.User.username">
         <svg
           class="bi bi-three-dots dropdown-toggle"
@@ -61,7 +61,6 @@
 
 <script>
 import { mapState } from "vuex";
-//import axios from "axios";
 
 export default {
   name: "Post",
@@ -84,31 +83,7 @@ export default {
     },
     changeEditStyle(value) {
       this.$store.dispatch("changeEditStyle", value);
-    },
-    chargeValuePost(postId, postContent, postImage) {
-      this.post.id = postId;
-      this.post.content = postContent;
-      this.post.attachement = postImage;
-    },
-    deletePost() {
-      console.log("Fonction de suppression du post " + this.post.id);
-      console.log("user demandeur", this.user);
-      /*axios
-        .delete("http://localhost:3000/api/post/delete", {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("token")
-          },
-          data: {
-            postId: this.idPost,
-            userIdOrder: this.user.userId
-          }
-        })
-        .then(() => {
-          window.location.reload();
-        })
-        .catch(error => console.log(error));*/
-    },
-    updatePost() {}
+    }
   }
 };
 </script>

@@ -1,12 +1,7 @@
 <template>
   <div id="wall" class="wall">
     <CreatePost />
-    <Post
-      v-for="post in allPosts"
-      v-bind:key="post.id"
-      :post="post"
-      @infosPost="setInfos"
-    />
+    <Post v-for="post in allPosts" v-bind:key="post.id" :post="post" @infosPost="setInfos" />
     <modalBoxModerate :post="post" />
   </div>
 </template>
@@ -26,10 +21,11 @@ export default {
   },
   data() {
     return {
-      post:{
+      post: {
         id: "",
-        content:'',
-        image:''},
+        content: "",
+        image: ""
+      },
       //affichePsts: true,
       //afficheFrm: false,
       allPosts: []
@@ -40,7 +36,7 @@ export default {
   },
   methods: {
     setInfos(payload) {
-      this.post= payload.post;
+      this.post = payload.post;
     }
   },
   mounted() {

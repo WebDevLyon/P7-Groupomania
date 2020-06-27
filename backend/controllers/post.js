@@ -29,7 +29,6 @@ exports.create = (req, res) => {
                     models.Post.create({
                         content: content,
                         attachement: attachmentURL,
-                        like: 0,
                         UserId: user.id
                     })
                         .then((newPost) => {
@@ -80,23 +79,46 @@ exports.delete = (req, res) => {
             if (user && (user.isAdmin == true || user.id == userOrder)) {
                 console.log('Suppression du post id :', req.body.postId);
                 models.Post
-                .destroy({
-                    where: { id: req.body.postId }
-                })
-                .then(() => {
-                    res.end();
-                })
-                .catch(err => res.status(500).json(err))
+                    .destroy({
+                        where: { id: req.body.postId }
+                    })
+                    .then(() => {
+                        res.end();
+                    })
+                    .catch(err => res.status(500).json(err))
             } else { res.status(403).json('Utilisateur non autorisé à supprimer ce post') }
-
-            /*if (user !== null && ( user.isAdmin == true || user.id =='posteur')) {
-               
-                }
-             else {
-                res.status(401).json({error:'demande non autorisée'});
-            }
         })
         .catch(error => res.status(500).json(error));
-*/
-        })
+};
+
+//Modification d'un post
+exports.update = (req, res) => {
+    //récupération de l'id du demandeur pour vérification
+    let userOrder = req.body.userIdOrder;
+    //identification du demandeur
+    let id = utils.getUserId(req.headers.authorization);
+    models.User.findOne({
+        attributes: ['id', 'email', 'username', 'isAdmin'],
+        where: { id: id }
+    })
+        .then(user => {
+            //Vérification que le demandeur est soit l'admin soit le poster (vérif aussi sur le front)
+            if (user && (user.isAdmin == true || user.id == userOrder)) {
+                console.log('Modif ok pour le post :', req.body.postId);
+                models.Post
+                    .update(
+                        {content: req.body.newText,
+                        attachement: req.body.newImg
+                        },
+                        { where: { id: req.body.postId } }
+                    )
+                    .then(() => res.end())
+                    .catch(err => res.status(500).json(err))
+            }
+            else {
+                res.status(401).json({ error: 'Utilisateur non autorisé à modifier ce post' })
+            }
+        }
+        )
+        .catch(error => res.status(500).json(error));
 }
