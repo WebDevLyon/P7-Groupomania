@@ -1,27 +1,27 @@
 {
   "development": {
-    "username": "root",
-    "password": "@Nlachise69120",
-    "database": "groupomania_development",
-    "host": "localhost",
+    "username": "YOUR_USERNAME",
+    "password": "YOUR_PASSWORD",
+    "database": "YOUR_DB_NAME",
+    "host": "YOUR_HOST",
     "dialect": "mysql",
     "operatorsAliases": false,
     "timezone": "SYSTEM"
   },
   "test": {
-    "username": "root",
-    "password": "@Nlachise69120",
-    "database": "groupomania_test",
-    "host": "127.0.0.1",
+    "username": "YOUR_USERNAME",
+    "password": "YOUR_PASSWORD",
+    "database": "YOUR_DB_NAME",
+    "host": "YOUR_HOST",
     "dialect": "mysql",
     "operatorsAliases": false,
     "timezone": "SYSTEM"
   },
   "production": {
-    "username": "root",
-    "password": "@Nlachise69120",
-    "database": "groupomania_production",
-    "host": "127.0.0.1",
+    "username": "YOUR_USERNAME",
+    "password": "YOUR_PASSWORD",
+    "database": "YOUR_DB_NAME",
+    "host": "YOUR_HOST",
     "dialect": "mysql",
     "operatorsAliases": false,
     "timezone": "SYSTEM"
