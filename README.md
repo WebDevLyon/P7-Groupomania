@@ -21,9 +21,10 @@ Vue.js
 
 1. Clone the repos
 2. Run ```npm install```
-3. Run ```sequelize db:create && sequelize db:migrate```
-4. Import sauvegarde.sql
-5. Enjoy
+3. Configure ```config/config.json```
+4. Run ```sequelize db:create && sequelize db:migrate```
+5. Import sauvegarde.sql
+6. Enjoy
 
 ## Authors
 
