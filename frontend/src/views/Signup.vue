@@ -1,6 +1,6 @@
 <template>
   <main class="main main--connect">
-     <form class="w-75 align-items-center form-block d-flex m-auto shadow rounded">
+    <form class="w-75 align-items-center form-block d-flex m-auto shadow rounded">
       <div
         class="form-block--left d-flex flex-column justify-content-center block-demi-container p-3 text-right align-self-stretch"
       >
@@ -13,7 +13,7 @@
         </p>
       </div>
       <div class="block-demi-container p-3">
-         <div class="form-group">
+        <div class="form-group">
           <label for="inputEmail">Email Groupomania</label>
           <input type="email" class="form-control" id="inputEmail" v-model="dataSignup.email" />
         </div>
@@ -33,29 +33,6 @@
         <button @click.prevent="sendSignup" type="submit" class="btn btn-primary">Submit</button>
       </div>
     </form>
-   <!-- <img class="logo" src="../assets/icon.png" alt="Logo Groupomania" />
-    <div class="form-group">
-      <label for="email">
-        Email Groupomania
-        <span class="requis">*</span>
-      </label>
-      <input v-model="dataSignup.email" id="email" type="email" />
-    </div>
-    <div class="form-group">
-      <label for="username">
-        Pseudo
-        <span class="requis">*</span>
-      </label>
-      <input v-model="dataSignup.username" id="username" type="text" />
-    </div>
-    <div class="form-group">
-      <label for="password">
-        Password
-        <span class="requis">*</span>
-      </label>
-      <input v-model="dataSignup.password" id="password" type="password" />
-    </div>
-    <button @click.prevent="sendSignup" id="btn-connect">Se connecter</button>-->
   </main>
 </template>
 
@@ -80,10 +57,14 @@ export default {
   },
   methods: {
     sendSignup() {
+      const regexPassword = /((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W]).{8,64})/
+      const regexEmail = /^[a-z0-9!#$ %& '*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&' * +/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/g;
+      const usernameRegex = /^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,29}$/;
       if (
-        this.dataSignup.email !== null ||
+        (this.dataSignup.email !== null ||
         this.dataSignup.username !== null ||
-        this.dataSignup.password !== null
+        this.dataSignup.password !== null) &&
+        (regexPassword.test(this.dataSignup.password) && regexEmail.test(this.dataSignup.email) && usernameRegex.test(this.dataSignup.username))
       ) {
         axios
           .post("http://localhost:3000/api/user/signup", this.dataSignup)
@@ -96,7 +77,7 @@ export default {
           })
           .catch(error => console.log(error));
       } else {
-        console.log("oops !");
+        alert("oops ! Un problème est survenue avec vos saisies");
       }
     }
   }
